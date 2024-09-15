@@ -1,0 +1,19 @@
+{
+  "name": "biesvm",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "antlr": "java -jar tools/antlr4-4.13.0-complete.jar -Dlanguage=JavaScript -o src/parser biesASM.g4",
+    "test": "mocha",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "antlr4": "^4.13.2",
+    "mocha": "^10.7.3"
+  }
+}
+
+
+
+
