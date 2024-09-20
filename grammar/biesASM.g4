@@ -2,7 +2,8 @@ grammar biesASM;
 
 program: (frame | instruction)+ HLT;
 
-frame: FUN instruction* END;
+frame: FUN instruction* endFrame;
+endFrame: '$END ' FUNCTION;                            // Fin del frame
 
 
 instruction: LDV NUM                    // Cargar valor en el registro
@@ -31,7 +32,6 @@ APP: 'APP';                             // Aplicar función
 RET: 'RET';                             // Retornar de función
 HLT: 'HLT';                             // Instrucción para detener
 FUN: '$FUN ' FUNCTION;                   // Definir función
-END: '$END ' FUNCTION;                            // Fin del frame
 
 
 NUM: ('-'? [0-9]+);                     // Definición de números (incluyendo negativos)

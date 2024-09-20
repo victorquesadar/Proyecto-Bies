@@ -32,10 +32,14 @@ export function parseProgram(programCode) {
     }else if(child instanceof biesASMParser.FrameContext){
       parsedProgram.instructions.push(child);
       child.children.forEach(funcChild => {
-        if (funcChild instanceof biesASMParser.InstructionContext || funcChild instanceof biesASMParser.FrameContext) {
+        if (funcChild instanceof biesASMParser.InstructionContext || funcChild instanceof biesASMParser.FrameContext
+          || funcChild instanceof biesASMParser.EndFrameContext
+        ) {
           parsedProgram.instructions.push(funcChild);
         }
+
       });
+
     } else {
       console.warn(`Unexpected child type: ${child.constructor.name}`);
     }
