@@ -1,13 +1,15 @@
 import { loadProgram } from "./src/loader.mjs"; 
 import { parseProgram } from "./src/parser.mjs"; 
-import { runProgram } from "./src/runner.mjs"; 
+//import { runProgram } from "./src/runner.mjs"; //OLD
+import { runProgram } from "./src/cleanRunner.mjs"; 
+
 async function main() {
   //const fileName = './test/example.biesVM'; 
   //const fileName = "./test/nivel4.biesVM";
   const fileName = [
-    //"./test/nivel1.biesVM",
-    //"./test/nivel2.biesVM",
-    //"./test/nivel3.biesVM",
+    "./test/nivel1.biesVM",
+    "./test/nivel2.biesVM",
+    "./test/nivel3.biesVM",
     "./test/nivel4.biesVM",
   ]; 
 
