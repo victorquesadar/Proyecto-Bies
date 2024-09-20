@@ -4,9 +4,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "antlr": "java -jar tools/antlr4-4.13.0-complete.jar -Dlanguage=JavaScript -o src/parser biesASM.g4",
+    "antlr": "java -jar tools/antlr4-4.13.0-complete.jar -Dlanguage=JavaScript -no-listener -visitor -o src/parser grammar/biesASM.g4",
     "test": "mocha",
-    "start": "node index.js"
+    "start": "node index.js",
+	 "docs": "jsdoc src/**/*.js -d docs"
   },
   "dependencies": {
     "antlr4": "^4.13.2",

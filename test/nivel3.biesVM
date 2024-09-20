@@ -1,0 +1,12 @@
+LDV 1          ; Cargar el valor de a (1) en la pila
+BST 0 0       ; Almacenar a en la posición 0 del stack (o memoria)
+LDV 665        ; Cargar el valor de b (665) en la pila
+BST 0 1       ; Almacenar b en la posición 1 del stack (o memoria)
+
+; Sumar a y b
+BLD 0 0       ; Cargar el valor de a desde la posición 0
+BLD 0 1       ; Cargar el valor de b desde la posición 1
+ADD            ; Sumar a y b (1 + 665)
+; Imprimir el resultado
+PRN            ; Imprimir el valor en la cima de la pila
+HLT            ; Terminar la ejecución

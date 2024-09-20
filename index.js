@@ -1,12 +1,27 @@
-import { loadProgram } from './src/loader.mjs';
-import { parseProgram } from './src/parser.mjs';
-import { runProgram } from './src/runner.mjs';
+import { loadProgram } from "./src/loader.mjs"; 
+import { parseProgram } from "./src/parser.mjs"; 
+import { runProgram } from "./src/runner.mjs"; 
+async function main() {
+  //const fileName = './test/example.biesVM'; 
+  //const fileName = "./test/nivel1.biesVM";
+  const fileName = [
+    "./test/nivel1.biesVM",
+    "./test/nivel2.biesVM",
+    "./test/nivel3.biesVM",
+    "./test/nivel4.biesVM",
+  ]; 
 
-// Cargar el programa (archivo biesVM)
-const programCode = loadProgram('./test/add.biesVM');
+  fileName.forEach((element) => {
+    console.log("Nivel: ", element);
+    try {
+      const programCode = loadProgram(element); // Cargar el código del programa
+      const parsedProgram = parseProgram(programCode); // Parsear el código
+      runProgram(parsedProgram); // Ejecutar el programa
+    } catch (error) {
+      console.error("Error en la ejecución del programa:", error);
+    }
+    console.log("\n");
+  });
+}
 
-// Parsear el programa cargado
-const parsedProgram = parseProgram(programCode);
-
-// Ejecutar el programa parseado
-runProgram(parsedProgram);
+main();
