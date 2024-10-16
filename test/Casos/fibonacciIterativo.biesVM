@@ -1,3 +1,5 @@
+; Autor:Esteban Mojica Gonzales
+
 LDV 16           ; Cargar el número cuyo Fibonacci se desea calcular (por ejemplo, 5)
 BST 0 1
 
