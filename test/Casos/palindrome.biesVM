@@ -1,0 +1,105 @@
+; Llamadas a funciones iniciales
+LDV 1                     ; Cargar el primer argumento (la lista)
+BST 0 0                   ; Guardar la lista en la posición 0
+LDF $2                    ; Cargar la función para calcular la longitud
+BST 0 1                   ; Almacenar la función en la posición 1
+APP $2                    ; CALCULA FOO(2) - Llamar a la función de longitud
+LDV 1                     ; Cargar la longitud de la lista
+SUB                       ; END = len - 1
+BST 1 2                   ; Guardar END en la posición 2
+
+LDV 0                     ; Inicializar start = 0
+BST 1 1                   ; Guardar start en la posición 1
+
+; Comienza la función para verificar palíndromo
+LDF $1                    ; Cargar la función para verificar palíndromo
+BST 0 1                   ; Almacenar la función en la posición 1
+APP $1                    ; CALCULA FOO(1) - Llamar a la función de palíndromo
+PRN                       ; Imprimir resultado
+
+HLT                       ; Detener la ejecución
+
+$FUN $2                   ; Función para calcular la longitud de una lista
+    BLD 2 0               ; Cargar la lista
+    BST 2 1               ; Almacenar la lista en la posición 1
+
+    LDV 1                 ; Inicializar longitud en 1
+    BST 2 2               ; Almacenar longitud en la posición 2
+
+    ; Comienza el bucle
+    BLD 2 1               ; Cargar la lista
+    LNT                    ; Comprobar si está vacía
+    BT +10                ; Si está vacía, saltar a fin
+
+    ; Obtener el siguiente elemento de la lista
+    BLD 2 1               ; Cargar la lista
+    LDV 1                 ; Cargar longitud actual
+    LRK                   ; Obtener el k-ésimo elemento
+    BST 2 1               ; Almacenar el siguiente elemento en la posición 1
+
+    ; Incrementar longitud
+    BLD 2 2               ; Cargar longitud
+    LDV 1                 ; Cargar longitud actual
+    ADD                   ; Incrementar longitud
+    BST 2 2               ; Guardar longitud actualizada
+
+    BR -11                ; Repetir el bucle
+
+    ; Retornar longitud final
+    BLD 2 2               ; Cargar longitud final
+    LDV 1                 ; Cargar longitud
+    SUB                   ; Restar 1 para ajustar
+    RET                   ; Retornar longitud
+$END $2
+
+$FUN $1                   ; Función para verificar si es palíndromo
+    ; Inicializar índices start = 0 y END = len - 1
+    LDV 0                 ; Inicializar start = 0
+    BST 1 1               ; Guardar start en la posición 1
+    BLD 1 0               ; Cargar la lista
+    LDF $2                ; Cargar la función que calcula la longitud
+    APP                   ; Ejecutar la función para obtener la longitud de la lista
+    LDV 1                 ; Cargar la longitud de la lista
+    SUB                   ; END = len - 1
+    BST 1 2               ; Guardar END en la posición 2
+
+    ; Comienza el ciclo de comparación
+    BLD 1 1               ; Cargar start
+    BLD 1 2               ; Cargar END
+    LT                    ; Comparar start < END
+    BF +19                ; Si no es menor, salir del ciclo
+
+    ; Comparar los elementos en start y END
+    BLD 1 0               ; Cargar la lista
+    BLD 1 1               ; Cargar start
+    LTK                   ; Obtener el elemento en la posición start
+
+    BLD 1 0               ; Cargar la lista
+    BLD 1 2               ; Cargar END
+    LTK                   ; Obtener el elemento en la posición END
+
+    EQ                    ; Comparar los elementos start y END
+    BT +2                 ; Si son iguales, continuar
+    BR +12                ; Si son diferentes, no es palíndromo
+
+    ; Incrementar start y decrementar END
+    BLD 1 1               ; Cargar start
+    LDV 1                 ; Cargar 1
+    ADD                   ; start++
+    BST 1 1               ; Guardar start en la posición 1
+
+    BLD 1 2               ; Cargar END
+    LDV 1                 ; Cargar 1
+    SUB                   ; END--
+    BST 1 2               ; Guardar END en la posición 2
+
+    BR -21                ; Repetir el ciclo
+
+; Fin del ciclo
+    LDV 1                 ; Si pasó todas las comparaciones, es palíndromo
+    LDV 1                 ; Retornar 1 (verdadero)
+    RET                   ; Retornar 1
+; No es palíndromo
+    LDV 0                 ; No es palíndromo
+    RET                   ; Retornar 0 (falso)
+$END $1

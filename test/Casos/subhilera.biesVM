@@ -1,0 +1,118 @@
+; Código principal
+LDV 1                      ; Cargar la hilera
+BST 0 0                    ; Almacenar la hilera en la posición 0
+LDV 2                      ; Cargar la subhilera
+BST 0 1                    ; Almacenar la subhilera en la posición 1
+
+; Inicializar índices
+LDV 0                      ; Inicializar el índice de la hilera en 0
+BST 1 2                    ; Almacenar índice de hilera en la posición 2
+
+LDV 0                      ; Inicializar el índice de la subhilera en 0
+BST 1 3                    ; Almacenar índice de subhilera en la posición 3
+
+; Obtener la longitud de la hilera y de la subhilera
+LDF $2                     ; Cargar la función que calcula la longitud
+APP                        ; Ejecutar para la hilera
+LDV 1                      ; Cargar la longitud de la hilera
+BST 1 4                    ; Almacenar longitud de la hilera en la posición 4
+
+LDF $2                     ; Cargar la función que calcula la longitud
+APP                        ; Ejecutar para la subhilera
+LDV 1                      ; Cargar la longitud de la subhilera
+BST 1 5                    ; Almacenar longitud de la subhilera en la posición 5
+
+; Comenzar la búsqueda
+BLD 1 4                    ; Cargar longitud de la hilera
+BLD 1 5                    ; Cargar longitud de la subhilera
+LT                         ; Comparar longitudes
+BF +10                     ; Si la hilera es más corta, salir
+
+; Comienza el bucle de búsqueda
+BLD 1 2                    ; Cargar índice de la hilera
+BLD 1 4                    ; Cargar longitud de la hilera
+LT                         ; Comparar si el índice de la hilera es menor que la longitud
+BF +30                     ; Si no, saltar a fin
+
+; Comenzar la comparación
+BLD 1 0                    ; Cargar la hilera
+BLD 1 2                    ; Cargar índice de la hilera
+LTK                        ; Obtener el carácter en la posición actual de la hilera
+
+; Comparar con el primer carácter de la subhilera
+BLD 1 1                    ; Cargar la subhilera
+BLD 1 3                    ; Cargar índice de la subhilera
+LTK                        ; Obtener el carácter en la posición actual de la subhilera
+
+EQ                         ; Comparar los caracteres
+BT +3                      ; Si son iguales, continuar
+
+; Si no son iguales, avanzar el índice de la hilera
+BLD 1 2                    ; Cargar índice de la hilera
+LDV 1                      ; Cargar 1
+ADD                        ; Incrementar índice
+BST 1 2                    ; Guardar índice de la hilera actualizado
+BR -16                     ; Repetir bucle
+
+; Si no coincide, regresar
+BR +10                     ; Si se sale del bucle, regresar
+
+; Comparar los caracteres de la subhilera
+BLD 1 1                    ; Cargar la subhilera
+BLD 1 3                    ; Cargar índice de la subhilera
+LTK                        ; Obtener el carácter en la subhilera
+
+BLD 1 0                    ; Cargar la hilera
+BLD 1 2                    ; Cargar índice de la hilera
+LTK                        ; Obtener el carácter en la hilera
+
+EQ                         ; Comparar los caracteres
+BT +3                      ; Si son iguales, continuar
+
+; Si no coinciden, reiniciar la búsqueda
+LDV 0                      ; Reiniciar índice de subhilera
+BST 1 3                    ; Guardar índice de subhilera en la posición 3
+
+; Avanzar el índice de la hilera
+BLD 1 2                    ; Cargar índice de la hilera
+LDV 1                      ; Cargar 1
+ADD                        ; Incrementar índice
+BST 1 2                    ; Guardar índice de la hilera actualizado
+BR -28                     ; Repetir bucle
+
+; Si se encuentra la subhilera, retornar el índice
+BLD 1 2                    ; Cargar índice de la hilera
+RET                        ; Retornar el índice de inicio
+
+; Si no se encuentra la subhilera
+LDV -1                     ; Retornar -1 si no se encuentra
+RET                        ; Retornar
+
+; Funciones al final
+$FUN $2                    ; Función para calcular la longitud de una lista
+BLD 1 0                    ; Cargar la lista
+LNT                        ; Comprobar si está vacía
+BT +8                      ; Saltar si está vacía
+
+LDV 1                      ; Inicializar en 0
+BST 2 0                    ; Almacenar longitud en posición 0
+
+; Comienza el bucle
+BLD 1 0                    ; Cargar lista
+LDV 1                      ; Cargar longitud
+ADD                        ; Incrementar longitud
+BST 2 0                    ; Almacenar longitud
+
+; Continuar al siguiente elemento
+BLD 1 0                    ; Cargar lista
+LDV 1                      ; Cargar longitud
+LRK                        ; Obtener el k-ésimo elemento
+BST 1 0                    ; Almacenar lista en posición 0
+
+BR -6                      ; Repetir el bucle
+
+; Fin del bucle
+BLD 2 0                    ; Cargar longitud final
+RET                        ; Retornar longitud
+$END $2                    ; Fin de la función
+HLT                        ; Terminar la ejecución
