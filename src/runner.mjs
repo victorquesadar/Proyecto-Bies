@@ -146,6 +146,81 @@ function runProgram(parsedProgram) {
 							console.error(`Label or function ${label} not found.`);
 						}
 						break;
+						
+					case "LNT": 
+						if (stack.length === 0) {
+							console.error("No list on stack for LNT operation.");
+							return;
+						}
+						const listForLNT = stack.pop();
+						if (Array.isArray(listForLNT)) {
+							accumulator = listForLNT.length === 0 ? 1 : 0; // Retorna 1 si está vacía, 0 si no
+						} else {
+							console.error("Top of stack is not a list.");
+						}
+						stack.push(accumulator);
+						console.log(`LNT result: ${accumulator}`);
+						break;
+
+					case "LIN":
+						if (stack.length < 2) {
+							console.error("Not enough values on stack for LIN operation.");
+							return;
+						}
+						const element = stack.pop();
+						const listForLIN = stack.pop();
+						if (Array.isArray(listForLIN)) {
+							listForLIN.unshift(element); // Inserta el elemento al inicio de la lista
+							stack.push(listForLIN);
+							console.log(`List after LIN: ${listForLIN}`);
+						} else {
+							console.error("Top of stack is not a list.");
+						}
+						break;
+
+					case "LTK":
+						if (stack.length < 2) {
+							console.error("Not enough values on stack for LTK operation.");
+							return;
+						}
+						const k = stack.pop();
+						const listForLTK = stack.pop();
+						if (Array.isArray(listForLTK) && Number.isInteger(k) && k >= 0 && k < listForLTK.length) {
+							accumulator = listForLTK[k];
+							stack.push(accumulator);
+							console.log(`LTK result: ${accumulator}`);
+						} else {
+							console.error("Invalid list or index for LTK operation.");
+						}
+						break;
+
+					case "LRK":
+						if (stack.length < 2) {
+							console.error("Not enough values on stack for LRK operation.");
+							return;
+						}
+						const index = stack.pop();
+						const listForLRK = stack.pop();
+						if (Array.isArray(listForLRK) && Number.isInteger(index) && index >= 0 && index <= listForLRK.length) {
+							const restOfList = listForLRK.slice(index);
+							stack.push(restOfList);
+							console.log(`LRK result: ${restOfList}`);
+						} else {
+							console.error("Invalid list or index for LRK operation.");
+						}
+						break;
+
+					case "TOL":
+						if (stack.length === 0) {
+							console.error("No values on stack for TOL operation.");
+							return;
+						}
+						const tolValue = stack.pop();
+						const tolList = Array.isArray(tolValue) ? tolValue : [tolValue];
+						stack.push(tolList);
+						console.log(`TOL result: ${tolList}`);
+						break;
+
 
 					case "APP":
 						if (stack.length === 0) {

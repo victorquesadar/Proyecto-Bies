@@ -17,6 +17,11 @@ instruction: LDV NUM                    // Cargar valor en el registro
            | LDF FUNCTION                       // Cargar función
            | APP FUNCTION                        // Aplicar función
            | RET                        // Retornar de función
+		   | LNT                // Test de nulidad de lista
+           | LIN                // Insertar en el inicio de una lista
+           | LTK                // Obtener el k-ésimo elemento de una lista
+           | LRK                // Obtener el resto de la lista después del k-ésimo
+           | TOL                // Convertir a lista
            ;
 
 LDV: 'LDV';                             // Instrucción para cargar valor
@@ -29,11 +34,16 @@ BST: 'BST';                             // Instrucción para almacenar
 BLD: 'BLD';                             // Instrucción para cargar
 LDF: 'LDF';                             // Instrucción para cargar función
 APP: 'APP';                             // Aplicar función
-RET: 'RET';                             // Retornar de función
+RET: 'RET'; 
+LNT: 'LNT';
+LIN: 'LIN';
+LTK: 'LTK';
+LRK: 'LRK';
+TOL: 'TOL';                            // Retornar de función
 HLT: 'HLT';                             // Instrucción para detener
 FUN: '$FUN ' FUNCTION;                   // Definir función
 
-
+LIST: '[' (NUM (',' NUM)*)? ']';
 NUM: ('-'? [0-9]+);                     // Definición de números (incluyendo negativos)
 WS: [ \t\r\n]+ -> skip;                 // Espacios en blanco son ignorados
 FUNCTION:'$'[0-9]+;

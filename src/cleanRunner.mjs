@@ -3,6 +3,7 @@ let accumulator = 0;
 const frames = [{}]; // Inicializar con un frame vacío
 let returnAddress = null; // Inicializar la dirección de retorno
 let actualFrame = 0;
+let lists = [];
 
 function runProgram(parsedProgram) {
 	console.log("Running program...");
@@ -19,9 +20,15 @@ function runProgram(parsedProgram) {
 		'HLT': () => haltProgram(),
 		'RET': () => returnFromFunction(),
 		'LDF': (args) => loadFunction(args[0]),
+		'LIN': () => insertInList(), // Instrucción para insertar en lista
+		'LNT': () => listNullTest(),  // Instrucción para obtener longitud de lista
+		'LTK': () => takeFromList(),    // Instrucción para tomar de lista
+		'LRK': () => getListFromIndex(),   // Instrucción para eliminar de lista
+		'TOL': () => topOfList(),  
 		'APP': (args, inst, idx) => applyFunction(args, idx),
 		'$FUN': (args, inst, idx) => skipFunctionBody(inst, idx),
 		"$END ": (args, inst, idx) => endOfFrame(args, inst, idx)
+ 
 	};
 
 	logic(parsedProgram.instructions);
@@ -127,6 +134,244 @@ function runProgram(parsedProgram) {
 		console.log(`Skipping function body to index ${idx}`);
 		return idx;
 	}
+function loadList(label) {
+    const list = lists[label]; // Obtener la lista desde 'lists'
+
+    if (Array.isArray(list)) {
+        // Cargar la lista en la parte superior del stack
+        stack.unshift(list); 
+        console.log(`List loaded onto stack:`, list);
+        return list; // Retornar la lista
+    } else {
+        console.log(`List '${label}' not loaded because it is empty or undefined.`);
+        return null; // Retornar null si no se carga
+    }
+}
+
+
+
+
+
+
+
+
+function pushToStack(value) {
+    stack.push(value); // Agrega el valor al stack
+    console.log(`Pushed to stack: ${value}`);
+}
+
+function popFromStack() {
+    if (stack.length === 0) {
+        console.error("Stack is empty. Cannot pop.");
+        return null; // Retorna null si no hay elementos en el stack
+    }
+    const value = stack.pop(); // Saca el valor de la pila
+    console.log(`Popped from stack: ${value}`);
+    return value;
+}
+
+function createList() {
+    const newList = []; // Crea una nueva lista vacía
+    lists.push(newList); // Agrega la nueva lista a la colección lists
+    stack.push(newList); // También la agrega al stack para operaciones
+    console.log("Created a new list on the top of the stack.");
+}
+
+function listNullTest() {
+    if (stack.length === 0) {
+        console.error("Stack is empty. Cannot perform LNT operation.");
+        return;
+    }
+
+    const list = stack[stack.length - 1]; // Acceder a la lista en el tope de la pila sin eliminarla
+    if (!Array.isArray(list)) {
+        console.error("Top of stack is not a list for LNT operation.");
+        return;
+    }
+
+    const isEmpty = list.length === 0; // Verifica si la lista está vacía
+    const T = isEmpty ? 1 : 0; // T es 1 si la lista está vacía, 0 si no
+
+    if (isEmpty) {
+        console.log("The list is empty.");
+    } else {
+        console.log("The list is not empty.");
+    }
+
+    console.log(`List: ${list}`);
+    
+    stack.push(T); // Vuelve a empujar el valor T en la pila
+    console.log(`Value pushed onto stack: ${T}`);
+	
+}
+
+function insertInList(label) {
+    console.log("Stack before LIN operation:", stack);
+
+    // Verificamos si hay suficientes elementos en el stack
+    if (stack.length < 2) {
+        console.error("Not enough elements on the stack for LIN operation.");
+        return;
+    }
+
+    const value = stack.pop(); // Obtenemos el valor a insertar
+    const list = loadList(label); // Intentamos cargar la lista
+
+    if (!list) {
+        console.error("Failed to load the list, aborting LIN operation.");
+        stack.push(value); // Regresamos el valor al stack
+        return;
+    }
+
+    // Insertamos el valor en la lista cargada al principio
+    list.unshift(value); // Agregar el valor al inicio de la lista existente
+
+    // Limpiar el stack
+    stack.splice(0, stack.length);
+    
+    console.log("Inserted into list:", list);
+    stack.push(list); // Regresar la lista al stack
+
+    console.log("Stack after LIN operation:", stack);
+}
+
+
+
+
+
+
+
+function topOfList(label) {
+
+    const list = loadList(label); // Cargar la lista
+
+    console.log("Stack before TOL operation:", stack);
+
+    if (stack.length === 0) {
+        console.error("Stack is empty, cannot perform TOL operation.");
+        return;
+    }
+
+    const topValue = stack.pop(); // Sacamos el valor de la parte superior del stack
+
+    // Verificamos si el topValue es una lista
+    if (Array.isArray(topValue)) {
+        console.log(`Top value is a list. Pushing it back.`);
+        stack.push(topValue); // Regresamos la lista al stack
+    } else {
+        console.log(`Top value is not a list. Pushing it back as a new list.`);
+        const newList = [topValue]; // Creamos una nueva lista solo si es necesario
+        stack.push(newList);
+        lists[label] = newList; // Esto debería evitarse si se quiere mantener la lista original
+    }
+
+    console.log("Stack after TOL operation:", stack);
+    return stack[stack.length - 1]; // Retornamos la lista en la parte superior del stack
+	stack.splice(0,stack.length);
+	
+}
+
+
+
+
+
+
+function showStack() {
+    console.log("Current stack:", JSON.stringify(stack));
+}
+
+function insertIntoList(value) {
+    console.log("Stack before inserting into list:", stack);
+    if (stack.length === 0 || !Array.isArray(stack[stack.length - 1])) {
+        stack.push([]); // Crear nueva lista si no existe
+    }
+
+    const list = stack.pop(); // Saca la lista existente
+    list.unshift(value); // Inserta al inicio de la lista
+    console.log(`Inserted ${value} into list: ${list}`);
+    // No es necesario volver a poner la lista en el stack
+}
+
+function takeFromList() {
+    showStack();
+    if (stack.length < 2) {
+        console.error("Not enough elements on the stack for LTK operation.");
+        return;
+    }
+
+    const index = popFromStack(); // Saca el índice
+    const list = popFromStack(); // Saca la lista
+
+    if (!Array.isArray(list)) {
+        console.error("Top of stack is not a list for LTK operation.");
+        stack.push(list); // Vuelve a empujar la lista
+        stack.push(index); // Vuelve a empujar el índice
+        return;
+    }
+
+    if (index < 0 || index >= list.length) {
+        console.error("Index out of bounds for the list.");
+        stack.push(list); // Vuelve a empujar la lista
+        stack.push(index); // Vuelve a empujar el índice
+        return;
+    }
+
+    const value = list[index]; // Toma el valor del índice
+    console.log(`Value taken from list: ${value}`);
+
+    // Empuja solo el valor a la pila
+    stack.push(value); // Devuelve solo el valor extraído a la pila
+    showStack(); // Mostrar estado de la pila después de tomar un valor
+	
+}
+
+function getListFromIndex(label) {
+    // Cargar la lista usando la función loadList
+    const list = loadList(label);
+    console.log("Stack before LRK operation:", stack);
+
+    // Verificamos que haya suficientes elementos en la pila
+    if (stack.length < 2) {
+        console.error("Not enough elements on the stack for LRK operation.");
+        return;
+    }
+
+    const index = popFromStack(); // Saca el índice
+    const topValue = popFromStack(); // Saca el valor de la parte superior del stack
+
+    // Verificamos si el topValue es una lista
+    if (!Array.isArray(topValue)) {
+        console.error("Top of stack is not a list for LRK operation.");
+        stack.push(topValue); // Vuelve a empujar el topValue
+        stack.push(index); // Vuelve a empujar el índice
+        return;
+    }
+
+    // Verificamos que el índice esté dentro de los límites de la lista
+    if (index < 0 || index >= topValue.length) {
+        console.error(`Index out of bounds for the list. Valid index range is 0 to ${topValue.length - 1}.`);
+        stack.push(topValue); // Vuelve a empujar la lista
+        stack.push(index); // Vuelve a empujar el índice
+        return;
+    }
+
+    // Cargamos la lista de nuevo a la pila antes de aplicar el slice
+    stack.push(topValue);
+    console.log(`List loaded onto stack:`, topValue);
+
+    // Obtiene el resto de la lista a partir del índice especificado
+    const slicedList = topValue.slice(index); // Toma el resto de la lista a partir del índice
+    console.log(`Rest of the list after index ${index}: ${slicedList}`);
+	stack.splice(0,stack.length);
+    stack.push(slicedList); // Devuelve el resto de la lista a la pila
+    showStack(); // Mostrar estado de la pila después de la operación
+
+}
+
+
+
+
+	
 	function logic(instructions) {
 		for (let i = 0; i < instructions.length; i++) {
 			const inst = instructions[i];

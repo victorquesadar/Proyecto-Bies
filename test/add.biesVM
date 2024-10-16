@@ -1,23 +1,15 @@
-LDV 1
-BST 0 0
-LDF $1
-BST 0 1
-LDV 4
-LDV 3
-BLD 0 1
-APP $1; CALCULA FOO(3) 
-APP $2; CALCULA FOO(3)(4)
-PRN
-
-$FUN $1
-LDF $2
-RET
-$END $1
-
-$FUN $2
-BLD 1 0 ; X
-BLD 0 0
-ADD
-RET
-$END $2
-HLT
+LDV 5           ; Carga el valor 5 en el acumulador
+TOL             ; Convierte 5 en una lista de un solo elemento [5]
+LDV 10          ; Carga el valor 10 en el acumulador
+LIN             ; Inserta 10 al principio de la lista, ahora es [10, 5]
+LNT             ; Comprueba si la lista está vacía (resultado: 0, ya que no está vacía)
+PRN             ; Imprime el resultado de LNT (0)
+LDV 20          ; Carga el valor 20 en el acumulador
+LIN             ; Inserta 20 al principio de la lista, ahora es [20, 10, 5]
+LDV 1           ; Carga el valor 1 en el acumulador
+LTK             ; Extrae el segundo elemento (índice 1) de la lista, que es 10
+PRN             ; Imprime el valor 10
+LDV 1           ; Carga el valor 2 en el acumulador
+LRK             ; Devuelve el resto de la lista desde el índice 2, que es [5]
+PRN             ; Imprime [5]
+HLT             ; Detiene el programa
