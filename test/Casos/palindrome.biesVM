@@ -1,3 +1,5 @@
+; Autor:Victor Quesada Rodriguez
+
 ; Llamadas a funciones iniciales
 LDV 1                     ; Cargar el primer argumento (la lista)
 BST 0 0                   ; Guardar la lista en la posición 0
