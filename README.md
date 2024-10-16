@@ -17,6 +17,7 @@ las reglas lexicas se encuentran en `grammar/biesASM.g4`
 
 Para ejecutar la aplicación, primero genera el antlr luego ejecuta el index.js generado:
 `npm run antlr`
-`npm start`
+`npm start [nombre del test]`
+ej. `npm start mayor`
 
 las reglas lexicas se encuentran en `grammar/biesASM.g4`
