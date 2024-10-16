@@ -1,5 +1,5 @@
 ; Test case: Resolver una cuadrática
-; Autor: Tu Nombre
+; Autor:Jose Pablo Álvarez Araya
 
 ; Resolver ax^2 + bx + c = 0 para a=1, b=-3, c=2
 LDV 1           ; Cargar 1 en la pila
