@@ -1,0 +1,34 @@
+; Test case: Resolver una cuadrática
+; Autor: Tu Nombre
+
+; Resolver ax^2 + bx + c = 0 para a=1, b=-3, c=2
+LDV 1           ; Cargar 1 en la pila
+BST 0 0         ; Almacenar 1 en frames[0][0] (a)
+LDV -3          ; Cargar -3 en la pila
+BST 0 1         ; Almacenar -3 en frames[0][1] (b)
+LDV 2           ; Cargar 2 en la pila
+BST 0 2         ; Almacenar 2 en frames[0][2] (c)
+
+; Definir la función para calcular el discriminante
+$FUN $1
+BLD 0 0         ; Cargar b en la pila
+BLD 0 0         ; Cargar b en la pila
+MUL             ; b^2
+BLD 0 1         ; Cargar a en la pila
+LDV 4           ; Cargar 4 en la pila
+MUL             ; 4a
+BLD 0 2         ; Cargar c en la pila
+MUL             ; 4ac
+SUB             ; b^2 - 4ac
+RET             ; Retornar el resultado
+$END $1
+
+; Llamar a la función con los valores de a, b y c
+LDF $1          ; Cargar la dirección de la función en la pila
+BST 0 3         ; Almacenar la dirección de la función en frames[0][3]
+BLD 0 1         ; Cargar b en la pila
+BLD 0 0         ; Cargar a en la pila
+BLD 0 2         ; Cargar c en la pila
+APP 3           ; Aplicar la función con 3 parámetros
+PRN             ; Imprimir el resultado
+HLT             ; Detener el programa

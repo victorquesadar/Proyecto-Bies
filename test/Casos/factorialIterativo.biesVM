@@ -1,0 +1,44 @@
+LDV 1            ; Cargar el valor 1 en el registro
+BST 0 0          ; Almacenar 1 en la posición 0 del frame actual (resultado)
+LDV 5            ; Cargar el número cuyo factorial se desea calcular (por ejemplo, 5)
+BST 0 1          ; Almacenar 5 en la posición 1 del frame actual (n)
+
+; Definición de la función factorial
+$FUN $10         ; Inicio de la función factorial en la posición 10
+BLD 1 1          ; Cargar el valor de n (posición 1 en el frame actual)
+LDV 1            ; Cargar 1 para comparación
+CMP               ; Comparar n con 1
+; Si n es menor o igual que 1, regresar el resultado 1
+LDV 1            ; Cargar el valor 1 en el registro
+BST 0 0          ; Almacenar 1 en la posición 0 (resultado)
+RET               ; Finalizar función y regresar
+
+; Cuerpo de la función
+BLD 1 1          ; Cargar n
+BST 0 3          ; Almacenar n en la posición 3 (argumento)
+LDV 1            ; Cargar 1 para restar
+SUB               ; Decrementar n en 1
+BST 0 1          ; Almacenar el nuevo valor de n en la posición 1
+LDF $10          ; Cargar la dirección de la función factorial
+APP $10          ; Llamar recursivamente a la función factorial
+
+; Multiplicar el resultado de la llamada por n
+BLD 1 0          ; Cargar el resultado de la llamada
+BLD 1 3          ; Cargar n (posición 3)
+MUL               ; Multiplicar el resultado por n
+BST 0 0          ; Almacenar el nuevo resultado en la posición 0
+
+RET               ; Finalizar función y regresar
+$END $10         ; Fin de la función factorial
+
+; Llamada a la función factorial
+LDV 5            ; Cargar el número cuyo factorial se desea calcular (5)
+BST 0 1          ; Almacenar 5 en la posición 1 del frame actual
+LDF $10          ; Cargar la dirección de la función factorial
+BST 0 2          ; Guardar la dirección de la función en el frame actual
+APP $10          ; Llamar a la función factorial
+
+; Imprimir el resultado
+BLD 1 0          ; Cargar el resultado final
+PRN              ; Imprimir el resultado
+HLT              ; Detener la máquina

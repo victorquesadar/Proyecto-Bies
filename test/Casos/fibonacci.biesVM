@@ -1,0 +1,49 @@
+; Inicialización
+LDV 0            ; Cargar el valor 0 en el registro (F(0))
+BST 0 0          ; Almacenar 0 en la posición 0 del frame actual (F(0))
+LDV 1            ; Cargar el valor 1 en el registro (F(1))
+BST 0 1          ; Almacenar 1 en la posición 1 del frame actual (F(1))
+
+; Cargar el término que se desea calcular (por ejemplo, 5)
+LDV 5            ; Cargar el valor 5
+BST 0 2          ; Almacenar 5 en la posición 2 del frame actual (n)
+
+; Inicialización de variables para el cálculo
+LDV 0            ; Cargar F(0)
+BST 0 3          ; Almacenar F(0) en la posición 3 (previo)
+LDV 1            ; Cargar F(1)
+BST 0 4          ; Almacenar F(1) en la posición 4 (actual)
+LDV 2            ; Cargar el valor 2 (iniciar contador en 2)
+BST 0 5          ; Almacenar 2 en la posición 5 (contador)
+
+; Inicio del bucle
+; Bucle de cálculo
+BLD 1 5          ; Cargar el contador
+BLD 1 2          ; Cargar n (posición 2)
+CMP               ; Comparar contador con n
+JGT 4            ; Si contador > n, salir del bucle
+
+; Calcular F(n) = F(n-1) + F(n-2)
+BLD 1 3          ; Cargar F(n-2) (previo)
+BLD 1 4          ; Cargar F(n-1) (actual)
+ADD               ; Sumar los dos términos
+BST 0 7          ; Almacenar el resultado en la posición 7 (F(n))
+
+; Actualizar variables para el siguiente término
+BLD 1 4          ; Cargar F(n-1) (actual)
+BST 0 3          ; Almacenar el nuevo valor de F(n-2) (previo)
+BLD 1 7          ; Cargar el resultado (F(n))
+BST 0 4          ; Almacenar el nuevo valor de F(n-1) (actual)
+
+; Incrementar el contador
+BLD 1 5          ; Cargar el contador
+LDV 1            ; Cargar 1 para incrementar
+ADD               ; Incrementar el contador
+BST 0 5          ; Almacenar el nuevo contador
+
+JMP -15          ; Volver al inicio del bucle (ajustar el número de líneas correctamente)
+
+; Imprimir el resultado final de Fibonacci
+BLD 1 7          ; Cargar el resultado F(n) (posición 7)
+PRN              ; Imprimir el resultado
+HLT              ; Detener la máquina
