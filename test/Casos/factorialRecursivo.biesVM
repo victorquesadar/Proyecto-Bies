@@ -1,3 +1,5 @@
+; Autor:Esteban Mojica Gonzales
+
 LDV 1            ; Cargar el valor 1 en el registro (resultado base)
 BST 0 0          ; Almacenar 1 en la posición 0 del frame actual (resultado)
 LDV 5            ; Cargar el número cuyo factorial se desea calcular (por ejemplo, 5)
