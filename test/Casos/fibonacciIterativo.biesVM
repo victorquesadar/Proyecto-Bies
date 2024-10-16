@@ -1,0 +1,70 @@
+LDV 16           ; Cargar el número cuyo Fibonacci se desea calcular (por ejemplo, 5)
+BST 0 1
+
+
+; Definición de la función Fibonacci
+$FUN $10         ; Inicio de la función Fibonacci en la posición 10
+
+;variables temporales
+LDV 0           ;variable A
+BST 0 0         ; Almacenar A en la posición 0 del frame actual
+LDV 1           ;variable B
+BST 0 1         ; Almacenar B en la posición 1 del frame actual
+LDV 0           ;variable temp
+BST 0 2         ; Almacenar temp en la posición 2 del frame actual
+LDV 2           ; Cargar el valor de i en el registro
+BST 0 3         ; Cargar el valor de i 
+
+BLD 1 1         ;cargar n
+LDV 0           
+EQ              ;comparar n == 0
+
+BF 3            ; Si n es igual a 0, regresar 0
+LDV 0
+BST 1 2
+RET
+
+BLD 1 1
+LDV 1
+EQ
+
+BF 3            ; Si n es igual a 1, regresar 1
+LDV 1
+BST 1 2
+RET
+
+BLD 0 0        ;Cargar A
+BLD 0 1        ;Cargar B
+ADD            ;A+B
+BST 0 2        ;guardar en temp
+
+BLD 0 1       ;Cargar b
+BST 0 0       ;Guardar en a
+BLD 0 2       ;Cargar temp
+BST 0 1       ;Guardar en b
+
+BLD 0 3       ;Cargar i
+BLD 1 1       ;Cargar n
+EQ
+BF 3
+BLD 0 1       ;Cargar resultado
+BST 1 2       ;Guardar resultado
+RET
+
+BLD 0 3       ;Cargar i
+LDV 1
+ADD
+BST 0 3
+BR -20
+RET
+
+$END $10         ; Fin de la función Fibonacci
+
+LDF $10          ; Cargar funcion Fibonacci
+BST 0 0
+APP $10          ; Llamar a la función Fibonacci
+
+; Imprimir el resultado
+BLD 0 2          ; Cargar el resultado final
+PRN              ; Imprimir el resultado
+HLT              ; Detener la máquina

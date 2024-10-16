@@ -23,9 +23,10 @@ export function parseProgram(programCode) {
 		instructions: [],
 	};
 
+
 	// Recorremos los hijos del árbol
 	tree.children.forEach((child) => {
-		// Asegúrate de que el parser esté definido y tenga la propiedad correcta
+
 		if (child instanceof biesASMParser.InstructionContext) {
 			parsedProgram.instructions.push(child);
 		} else if (child instanceof biesASMParser.FrameContext) {
@@ -43,6 +44,8 @@ export function parseProgram(programCode) {
 			console.warn(`Unexpected child type: ${child.constructor.name}`);
 		}
 	});
+
+
 
 	return parsedProgram;
 }

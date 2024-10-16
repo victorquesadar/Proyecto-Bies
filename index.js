@@ -10,8 +10,11 @@ async function main() {
 		//"./test/nivel1.biesVM",
 		//"./test/nivel2.biesVM",
 		//"./test/nivel3.biesVM",
-		//"./test/nivel4.biesVM",
-		"./test/add.biesVM",
+		//"./test/Casos/fibonacciIterativo.biesVM",
+		"./test/Casos/mayor.biesVM",
+		"./test/Casos/testInput.biesVM"
+		//"./test/Casos/factorialIterativo.biesVM",
+
 	];
 
 	fileName.forEach((element) => {

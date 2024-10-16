@@ -11,13 +11,13 @@ BST 0 2         ; Almacenar 2 en frames[0][2] (c)
 
 ; Definir la función para calcular el discriminante
 $FUN $1
-BLD 0 0         ; Cargar b en la pila
-BLD 0 0         ; Cargar b en la pila
+BLD 1 0         ; Cargar b en la pila
+BLD 1 0         ; Cargar b en la pila
 MUL             ; b^2
-BLD 0 1         ; Cargar a en la pila
+BLD 1 1         ; Cargar a en la pila
 LDV 4           ; Cargar 4 en la pila
 MUL             ; 4a
-BLD 0 2         ; Cargar c en la pila
+BLD 1 2         ; Cargar c en la pila
 MUL             ; 4ac
 SUB             ; b^2 - 4ac
 RET             ; Retornar el resultado
@@ -29,6 +29,6 @@ BST 0 3         ; Almacenar la dirección de la función en frames[0][3]
 BLD 0 1         ; Cargar b en la pila
 BLD 0 0         ; Cargar a en la pila
 BLD 0 2         ; Cargar c en la pila
-APP 3           ; Aplicar la función con 3 parámetros
+APP $1           ; Aplicar la función con 3 parámetros
 PRN             ; Imprimir el resultado
 HLT             ; Detener el programa

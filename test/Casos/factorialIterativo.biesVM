@@ -1,44 +1,50 @@
 LDV 1            ; Cargar el valor 1 en el registro
 BST 0 0          ; Almacenar 1 en la posición 0 del frame actual (resultado)
-LDV 5            ; Cargar el número cuyo factorial se desea calcular (por ejemplo, 5)
+LDV 10            ; Cargar el número cuyo factorial se desea calcular (por ejemplo, 5)
 BST 0 1          ; Almacenar 5 en la posición 1 del frame actual (n)
+LDV 1           ; Cargar el valor 1 en el resultado
+BST 0 2          ; Almacenar 1 en la posición 2 del frame actual (resultado)
 
 ; Definición de la función factorial
 $FUN $10         ; Inicio de la función factorial en la posición 10
+LDV 2            ; Cargar 2 para i
+BST 0 0          ; Almacenar i en la posición 0 Contador i
+LDV 1           ; Cargar el valor 1
 BLD 1 1          ; Cargar el valor de n (posición 1 en el frame actual)
-LDV 1            ; Cargar 1 para comparación
-CMP               ; Comparar n con 1
-; Si n es menor o igual que 1, regresar el resultado 1
-LDV 1            ; Cargar el valor 1 en el registro
-BST 0 0          ; Almacenar 1 en la posición 0 (resultado)
-RET               ; Finalizar función y regresar
+LTE              ; Comparar i con 1
+BF 3
+LDV 1
+BST 1 2         ; Almacenar 1 en la posición 2 del frame 1
+RET              ; Si n es menor o igual que 1, regresar el resultado 1
 
-; Cuerpo de la función
-BLD 1 1          ; Cargar n
-BST 0 3          ; Almacenar n en la posición 3 (argumento)
-LDV 1            ; Cargar 1 para restar
-SUB               ; Decrementar n en 1
-BST 0 1          ; Almacenar el nuevo valor de n en la posición 1
-LDF $10          ; Cargar la dirección de la función factorial
-APP $10          ; Llamar recursivamente a la función factorial
+BLD 1 2          ; Cargar el valor de n (posición 1 en el frame padre)
+BLD 0 0          ; Cargar el valor de i (posición 0 en el frame actual)
+MUL
+BST 1 2          ; Almacenar resultado en la posición  
 
-; Multiplicar el resultado de la llamada por n
-BLD 1 0          ; Cargar el resultado de la llamada
-BLD 1 3          ; Cargar n (posición 3)
-MUL               ; Multiplicar el resultado por n
-BST 0 0          ; Almacenar el nuevo resultado en la posición 0
+BLD 0 0          ; Cargar el valor de i (posición 0 en el frame actual)
+BLD 1 1         ; Cargar el valor de n (posición 1)
+EQ
+BF 2
+BLD 1 2         ; Cargar el valor del resultado
+RET             ; retornar el resultado
 
+BLD 0 0          ; Cargar el valor de i (posición 0 en el frame actual)
+LDV 1
+ADD              ; Incrementar i en 1
+BST 0 0          ; Almacenar el nuevo valor de i
+BR -15       ; Saltar a la comparación
 RET               ; Finalizar función y regresar
 $END $10         ; Fin de la función factorial
 
+
 ; Llamada a la función factorial
-LDV 5            ; Cargar el número cuyo factorial se desea calcular (5)
-BST 0 1          ; Almacenar 5 en la posición 1 del frame actual
+
 LDF $10          ; Cargar la dirección de la función factorial
-BST 0 2          ; Guardar la dirección de la función en el frame actual
+BST 0 3          ; Guardar la dirección de la función en el frame actual
 APP $10          ; Llamar a la función factorial
 
 ; Imprimir el resultado
-BLD 1 0          ; Cargar el resultado final
+BLD 0 2          ; Cargar el resultado final
 PRN              ; Imprimir el resultado
 HLT              ; Detener la máquina

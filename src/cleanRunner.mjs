@@ -1,3 +1,5 @@
+import readline from 'readline';
+
 let stack = []; // Pila para almacenar valores
 let accumulator = 0;
 const frames = [{}]; // Inicializar con un frame vacío
@@ -27,8 +29,16 @@ function runProgram(parsedProgram) {
 		'TOL': () => topOfList(),  
 		'APP': (args, inst, idx) => applyFunction(args, idx),
 		'$FUN': (args, inst, idx) => skipFunctionBody(inst, idx),
-		"$END ": (args, inst, idx) => endOfFrame(args, inst, idx)
- 
+		"$END ": (args, inst, idx) => endOfFrame(args, inst, idx),
+		"EQ": () => compareOperation((a,b)=>a==b, "=="),
+		"GT": () => compareOperation((a,b)=>a>b, ">"),
+		"GTE": () => compareOperation((a,b)=>a>=b, ">="),
+		"LT": () => compareOperation((a,b)=>a<b, "<"),
+		"LTE": () => compareOperation((a,b)=>a<=b, "<="),
+		"BT": (args, inst, idx) => conditionalBranch(args[0], idx, true), //Branch on True
+		"BF": (args, inst, idx) => conditionalBranch(args[0], idx, false), //Branch on False
+		"BR": (args, inst, idx) => branch(args[0], idx), //Branch Relative
+		"INP": () => consoleInput()
 	};
 
 	logic(parsedProgram.instructions);
@@ -38,6 +48,25 @@ function runProgram(parsedProgram) {
 		accumulator = parseInt(args, 10);
 		stack.push(accumulator);
 	}
+	function input() {
+		return new Promise((resolve) => {
+
+		  process.stdin.resume();
+		  process.stdin.setEncoding('utf8');
+	  
+		  console.log('Escribe algo: ');
+	  
+		  process.stdin.on('data', (input) => {
+			const entrada = input.trim();
+			resolve(entrada); 
+			process.stdin.pause(); 
+		  });
+		});
+	  }
+	async function consoleInput(){
+		const entrada = await input();
+		console.log(`Input: ${entrada}`);
+	}
 
 	function storeInFrame(frameIdx, varIdx) {
 		const fIndex = parseInt(frameIdx, 10);
@@ -46,6 +75,18 @@ function runProgram(parsedProgram) {
 		frames[fIndex][vIndex] = accumulator;
 		console.log(`Stored ${accumulator} in frame ${fIndex}, variable ${vIndex}`);
 	}
+	function conditionalBranch(args, idx, bool) {
+		const condition = stack.pop();
+		if(bool && condition) idx += +args;
+		else if(!bool && !condition) idx += +args;
+		console.log(`Branch Relative to ${idx}`);
+		return idx;
+	}
+	function branch(args, idx) {
+		idx += +args;
+		console.log(`Branch jump to ${idx}`);
+		return idx;
+	}
 
 	function loadFromFrame(frameIdx, varIdx) {
 		const fIndex = parseInt(frameIdx, 10);
@@ -53,6 +94,14 @@ function runProgram(parsedProgram) {
 		accumulator = frames[fIndex]?.[vIndex] ?? 0;
 		stack.push(accumulator);
 		console.log(`Loaded ${accumulator} from frame ${fIndex}, variable ${vIndex}: ${accumulator}`);
+	}
+	function compareOperation(operation, opName) {
+		if (stack.length < 2) return console.error(`Not enough values for ${opName}`);
+		const val1 = stack.pop(), val2 = stack.pop();
+		let result = operation(val1, val2);
+		stack.push(+result);
+		console.log(`${val1} ${opName} ${val2} = ${result}`);
+
 	}
 
 	function binaryOperation(operation, opName, checkZero = false) {
@@ -120,6 +169,7 @@ function runProgram(parsedProgram) {
 			frames.shift();
 			if (returnAddress !== null) {
 				console.log(`Returning to instruction ${returnAddress}`);
+				//stack.push(accumulator);
 				return returnAddress;
 			}
 		} else {

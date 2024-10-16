@@ -20,8 +20,8 @@ BST 0 5          ; Almacenar 2 en la posición 5 (contador)
 ; Bucle de cálculo
 BLD 1 5          ; Cargar el contador
 BLD 1 2          ; Cargar n (posición 2)
-CMP               ; Comparar contador con n
-JGT 4            ; Si contador > n, salir del bucle
+EQ               ; Comparar contador con n
+GTE 4            ; Si contador > n, salir del bucle
 
 ; Calcular F(n) = F(n-1) + F(n-2)
 BLD 1 3          ; Cargar F(n-2) (previo)
@@ -41,7 +41,7 @@ LDV 1            ; Cargar 1 para incrementar
 ADD               ; Incrementar el contador
 BST 0 5          ; Almacenar el nuevo contador
 
-JMP -15          ; Volver al inicio del bucle (ajustar el número de líneas correctamente)
+JMP -17          ; Volver al inicio del bucle 
 
 ; Imprimir el resultado final de Fibonacci
 BLD 1 7          ; Cargar el resultado F(n) (posición 7)

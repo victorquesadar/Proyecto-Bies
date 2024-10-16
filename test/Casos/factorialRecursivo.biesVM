@@ -7,7 +7,7 @@ BST 0 1          ; Almacenar 5 en la posición 1 del frame actual (n)
 $FUN $10         ; Inicio de la función factorial en la posición 10
 BLD 1 1          ; Cargar el valor de n (posición 1 en el frame actual)
 LDV 1            ; Cargar 1 para comparación
-CMP               ; Comparar n con 1
+EQ               ; Comparar n con 1
 ; Si n es menor o igual que 1, regresar el resultado 1
 LDV 1            ; Cargar el valor 1 en el registro
 BST 0 0          ; Almacenar 1 en la posición 0 (resultado)

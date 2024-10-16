@@ -1,25 +1,25 @@
 
-LDV 5             ; Cargar el valor de 5 en el registro
+LDV 8327             ; Cargar el valor de 5 en el registro
 BST 0 0           ; Almacenar 5 en la posición 0 del frame actual
-LDV 10            ; Cargar el valor de 10 en el registro
+LDV 12            ; Cargar el valor de 10 en el registro
 BST 0 1           ; Almacenar 10 en la posición 1 del frame actual
 
 ; Definición de la función mayor
 $FUN $10          ; Inicio de la función mayor en la posición 10
 BLD 1 0           ; Cargar el valor de x en el registro (pos. 0 en el frame actual)
 BLD 1 1           ; Cargar el valor de y en el registro (pos. 1 en el frame actual)
-CMP               ; Comparar valores en el registro
-JLE $12           ; Si x <= y, saltar a la instrucción en la posición 12
-PRN               ; Si x > y, imprimir x
-RET               ; Finalizar función y regresar
-$END $10          ; Fin de la función mayor
+LTE               ; Comparar valores en el registro
+BF 2
+BLD 1 0
+RET
 
-LDV 5             ; Volver a cargar 5 para la llamada de función
-BST 0 0           ; Almacenar 5 en la posición 0 del frame actual
-LDV 10            ; Volver a cargar 10 para la llamada de función
-BST 0 1           ; Almacenar 10 en la posición 1 del frame actual
+BLD 1 1
+RET
+$END $10           ; Fin de la función mayor
+
 LDF $10           ; Cargar la dirección de la función mayor
 BST 0 2           ; Guardar la dirección de la función en el frame actual
 APP $10           ; Llamar a la función mayor
 
+PRN
 HLT               ; Detener el programa
