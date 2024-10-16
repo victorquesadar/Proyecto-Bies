@@ -1,3 +1,4 @@
+; Autor:Victor Quesada Rodriguez
 
 LDV 8327             ; Cargar el valor de 5 en el registro
 BST 0 0           ; Almacenar 5 en la posición 0 del frame actual
