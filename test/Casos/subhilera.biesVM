@@ -1,3 +1,5 @@
+; Autor:Jose Pablo Alvarez Araya
+
 ; Código principal
 LDV 1                      ; Cargar la hilera
 BST 0 0                    ; Almacenar la hilera en la posición 0
