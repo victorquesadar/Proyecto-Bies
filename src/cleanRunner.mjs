@@ -43,11 +43,45 @@ function runProgram(parsedProgram) {
 
 	logic(parsedProgram.instructions);
 
-	function loadValue(args) {
-		console.log(`Loading value: ${args}`);
-		accumulator = parseInt(args, 10);
-		stack.push(accumulator);
-	}
+function loadValue(args) {
+    // Si 'args' es una cadena, intentamos interpretarla como una lista
+    if (typeof args === 'string') {
+        if (args.startsWith('[') && args.endsWith(']')) {
+            try {
+                // Convertimos la cadena en una lista utilizando JSON.parse
+                const list = JSON.parse(args);
+                if (Array.isArray(list)) {
+                    // Cargar la lista en el stack
+                    stack.unshift(list); // Agregar la lista al principio del stack
+                    console.log(`List loaded onto stack:`, list);
+                    return; // Salimos de la función después de cargar la lista
+                }
+            } catch (e) {
+                console.error(`Error parsing list: ${e.message}`);
+            }
+        } else {
+            // Si no es una lista, intentamos convertirlo a un número
+            const value = parseInt(args, 10);
+            if (!isNaN(value)) {
+                accumulator = value;
+                stack.push(value); // Agregar valor al stack
+                console.log(`Loading value: ${value}`);
+            } else {
+                console.error(`Invalid argument: ${args}. Expected a number or a list.`);
+            }
+        }
+    } else if (Array.isArray(args)) {
+        // Si 'args' es una lista, cargar la lista en el stack
+        stack.unshift(args); // Agregar la lista al principio del stack
+        console.log(`List loaded onto stack:`, args);
+    } else {
+        console.error(`Invalid argument: ${args}. Expected a number or a list.`);
+    }
+}
+
+
+
+	
 	function input() {
 		return new Promise((resolve) => {
 
@@ -184,6 +218,11 @@ function runProgram(parsedProgram) {
 		console.log(`Skipping function body to index ${idx}`);
 		return idx;
 	}
+	
+	
+	
+	
+	
 function loadList(label) {
     const list = lists[label]; // Obtener la lista desde 'lists'
 

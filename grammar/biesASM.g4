@@ -6,7 +6,7 @@ frame: FUN instruction* endFrame;
 endFrame: '$END ' FUNCTION;                            // Fin del frame
 
 
-instruction: LDV NUM                    // Cargar valor en el registro
+instruction: LDV value                    // Cargar valor en el registro
            | ADD                        // Sumar
            | SUB                        // Restar
            | MUL                        // Multiplicar
@@ -68,6 +68,8 @@ BT: 'BT';                               // Bifurcación condicional en verdadero
 BF: 'BF';                               // Bifurcación condicional en falso
 BR: 'BR';                               // Bifurcación incondicional
 
+
+value: NUM | LIST;
 
 NUM: ('-'? [0-9]+);                     // Definición de números (incluyendo negativos)
 WS: [ \t\r\n]+ -> skip;                 // Espacios en blanco son ignorados

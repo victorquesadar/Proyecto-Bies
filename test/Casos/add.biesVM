@@ -1,0 +1,3 @@
+LDV [1,2,3,4]  ; Cargar la lista [1, 2, 3, 4] en el registro
+PRN               ; Imprimir la lista cargada
+HLT               ; Detener el programa
