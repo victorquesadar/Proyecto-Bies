@@ -21,10 +21,10 @@ const args = process.argv.slice(2);
 
 if (args.length < 1) {
   console.error("Por favor, proporciona el nombre del archivo a ejecutar.");
-  //process.exit(1); 
+  process.exit(1); 
 }
 
-//const fileName = args[0]; // Primer argumento: nombre del archivo
-const fileName = "factorialIterativo";
+const fileName = args[0]; // Primer argumento: nombre del archivo
+//const fileName = "factorialIterativo";
 // Llama a la función principal
 main("./test/Casos/"+fileName+".biesVM");
