@@ -43,6 +43,12 @@ function runProgram(parsedProgram) {
 
 	logic(parsedProgram.instructions);
 
+
+/**
+ * Carga un valor en la pila. Si el argumento es una cadena que representa una lista, 
+ * se convierte en una lista y se carga en la pila. Si es un número, se carga como un valor numérico.
+ * @param {string|Array} args - El valor a cargar en la pila, puede ser una cadena que representa una lista o un número.
+ */
 function loadValue(args) {
     // Si 'args' es una cadena, intentamos interpretarla como una lista
     if (typeof args === 'string') {
@@ -79,6 +85,10 @@ function loadValue(args) {
     }
 }
 
+/**
+ * Solicita una entrada del usuario a través de la consola.
+ * @returns {Promise<string>} Una promesa que se resuelve con la entrada del usuario.
+ */
 	function input() {
 		return new Promise((resolve) => {
 
@@ -94,11 +104,19 @@ function loadValue(args) {
 		  });
 		});
 	  }
+    /**
+     * Función asíncrona que solicita una entrada del usuario y la imprime en la consola.
+     */
 	async function consoleInput(){
 		const entrada = await input();
 		console.log(`Input: ${entrada}`);
 	}
 
+    /**
+     * Almacena un valor en un frame específico.
+     * @param {number|string} frameIdx - El índice del frame.
+     * @param {number|string} varIdx - El índice de la variable dentro del frame.
+     */
 	function storeInFrame(frameIdx, varIdx) {
 		const fIndex = parseInt(frameIdx, 10);
 		const vIndex = parseInt(varIdx, 10);
@@ -113,6 +131,14 @@ function loadValue(args) {
         }
 		console.log(`Stored ${accumulator} in frame ${fIndex}, variable ${vIndex}`);
 	}
+
+    /**
+     * Realiza una bifurcación condicional.
+     * @param {number|string} args - El argumento de la instrucción de bifurcación.
+     * @param {number} idx - El índice actual de la instrucción.
+     * @param {boolean} bool - La condición booleana para la bifurcación.
+     * @returns {number} El nuevo índice de la instrucción después de la bifurcación.
+     */
 	function conditionalBranch(args, idx, bool) {
 		const condition = stack.pop();
 		if(bool && condition) idx += +args;
@@ -120,12 +146,24 @@ function loadValue(args) {
 		console.log(`Branch Relative to ${idx}`);
 		return idx;
 	}
+
+    /**
+     * Realiza una bifurcación absoluta.
+     * @param {number|string} args - El argumento de la instrucción de bifurcación.
+     * @param {number} idx - El índice actual de la instrucción.
+     * @returns {number} El nuevo índice de la instrucción después de la bifurcación.
+     */
 	function branch(args, idx) {
 		idx += +args;
 		console.log(`Branch jump to ${idx}`);
 		return idx;
 	}
 
+    /**
+     * Carga un valor desde un frame específico.
+     * @param {number|string} frameIdx - El índice del frame.
+     * @param {number|string} varIdx - El índice de la variable dentro del frame.
+     */
 	function loadFromFrame(frameIdx, varIdx) {
 		const fIndex = parseInt(frameIdx, 10);
 		const vIndex = parseInt(varIdx, 10);
@@ -136,6 +174,12 @@ function loadValue(args) {
         }
 		console.log(`Loaded ${accumulator} from frame ${fIndex}, variable ${vIndex}: ${accumulator}`);
 	}
+
+    /**
+     * Realiza una operación de comparación entre dos valores en la pila.
+     * @param {Function} operation - La función de operación a realizar.
+     * @param {string} opName - El nombre de la operación.
+     */
 	function compareOperation(operation, opName) {
 		if (stack.length < 2) return console.error(`Not enough values for ${opName}`);
 		const val1 = stack.pop(), val2 = stack.pop();
@@ -145,6 +189,12 @@ function loadValue(args) {
 
 	}
 
+    /**
+     * Realiza una operación binaria entre dos valores en la pila.
+     * @param {Function} operation - La función de operación a realizar.
+     * @param {string} opName - El nombre de la operación.
+     * @param {boolean} [checkZero=false] - Indica si se debe verificar la división por cero.
+     */
 	function binaryOperation(operation, opName, checkZero = false) {
 		if (stack.length < 2) return console.error(`Not enough values for ${opName}`);
 		const val1 = stack.pop(), val2 = stack.pop();
@@ -154,16 +204,26 @@ function loadValue(args) {
 		console.log(`${opName} result: ${accumulator}`);
 	}
 
+    /**
+     * Imprime el valor superior de la pila.
+     */
 	function printValue() {
 		const value = stack.pop();
 		console.log(`Printing: ${value}`);
 	}
 
+    /**
+     * Detiene la ejecución del programa.
+     */
 	function haltProgram() {
 		console.log("Halting program.");
 		return;
 	}
 
+    /**
+     * Carga una función en la pila utilizando su etiqueta.
+     * @param {string} label - La etiqueta de la función a cargar.
+     */
 	function loadFunction(label) {
 		const index = findInstructionIndex(`$FUN ${label}`);
 		if (index !== -1) {
@@ -175,12 +235,25 @@ function loadValue(args) {
 			console.error(`Function ${label} not found`);
 		}
 	}
+
+    /**
+     * Marca el final de un frame y retorna de la función.
+     * @param {Array} args - Los argumentos de la instrucción.
+     * @param {Object} inst - La instrucción actual.
+     * @param {number} idx - El índice actual de la instrucción.
+     * @returns {number} El índice de retorno de la función.
+     */  
 	function endOfFrame(args, inst, idx) {
 		flag = true;
 		console.log("End of frame.");
 		return returnFromFunction();
 	}
 
+    /**
+     * Aplica una función utilizando el índice de la pila.
+     * @param {Array} args - Los argumentos de la instrucción.
+     * @param {number} idx - El índice actual de la instrucción.
+     */
 	function applyFunction(args, idx) {
 		if (stack.length === 0) return console.error("No function index on the stack.");
         const func = stack.pop();
@@ -194,6 +267,10 @@ function loadValue(args) {
 		executeFunction(funcIndex);
 	}
 
+    /**
+     * Ejecuta una función a partir de su índice.
+     * @param {number} funcIndex - El índice de la función a ejecutar.
+     */
 	function executeFunction(funcIndex) {
 		const functionInstructions = parsedProgram.instructions
 			.slice(funcIndex + 1)
@@ -205,10 +282,19 @@ function loadValue(args) {
 		logic(functionInstructions);
 	}
 
+    /**
+     * Encuentra el índice de una instrucción utilizando su etiqueta.
+     * @param {string} label - La etiqueta de la instrucción.
+     * @returns {number} El índice de la instrucción.
+     */
 	function findInstructionIndex(label) {
 		return parsedProgram.instructions.findIndex(inst => inst.children[0].getText() === label);
 	}
 
+    /**
+     * Retorna de una función al marco de pila anterior.
+     * @returns {number} El índice de retorno de la función.
+     */
 	function returnFromFunction() {
 		if (frames.length > 1) {
 			frames.shift();
@@ -222,6 +308,12 @@ function loadValue(args) {
 		}
 	}
 
+    /**
+     * Omite el cuerpo de una función y ajusta el índice de la instrucción.
+     * @param {Object} inst - La instrucción actual.
+     * @param {number} idx - El índice actual de la instrucción.
+     * @returns {number} El nuevo índice de la instrucción después de omitir el cuerpo de la función.
+     */
 	function skipFunctionBody(inst, idx) {
 		const startFuncIndex = parsedProgram.instructions.indexOf(inst);
 		const funcParent = parsedProgram.instructions[startFuncIndex];
@@ -230,6 +322,11 @@ function loadValue(args) {
 		return idx;
 	}
 	
+/**
+ * Carga una lista en la pila utilizando su etiqueta.
+ * @param {string} label - La etiqueta de la lista a cargar.
+ * @returns {Array|null} La lista cargada o null si no se pudo cargar.
+ */
 function loadList(label) {
     const list = lists[label]; // Obtener la lista desde 'lists'
 
@@ -244,12 +341,19 @@ function loadList(label) {
     }
 }
 
-
+/**
+ * Agrega un valor a la pila.
+ * @param {*} value - El valor a agregar a la pila.
+ */
 function pushToStack(value) {
     stack.push(value); // Agrega el valor al stack
     console.log(`Pushed to stack: ${value}`);
 }
 
+/**
+ * Saca el valor superior de la pila.
+ * @returns {*} El valor sacado de la pila o null si la pila está vacía.
+ */
 function popFromStack() {
     if (stack.length === 0) {
         console.error("Stack is empty. Cannot pop.");
@@ -260,6 +364,9 @@ function popFromStack() {
     return value;
 }
 
+/**
+ * Crea una nueva lista vacía y la agrega a la colección de listas y a la pila.
+ */
 function createList() {
     const newList = []; // Crea una nueva lista vacía
     lists.push(newList); // Agrega la nueva lista a la colección lists
@@ -267,6 +374,10 @@ function createList() {
     console.log("Created a new list on the top of the stack.");
 }
 
+/**
+ * Realiza una prueba de nulidad en la lista en el tope de la pila.
+ * Empuja 1 a la pila si la lista está vacía, de lo contrario empuja 0.
+ */
 function listNullTest() {
     if (stack.length === 0) {
         console.error("Stack is empty. Cannot perform LNT operation.");
@@ -295,6 +406,10 @@ function listNullTest() {
 	
 }
 
+/**
+ * Inserta un valor en una lista identificada por su etiqueta.
+ * @param {string} label - La etiqueta de la lista en la que se insertará el valor.
+ */
 function insertInList(label) {
     console.log("Stack before LIN operation:", stack);
 
@@ -325,7 +440,11 @@ function insertInList(label) {
     console.log("Stack after LIN operation:", stack);
 }
 
-
+/**
+ * Carga una lista en la pila utilizando su etiqueta y realiza la operación TOL (Top of List).
+ * @param {string} label - La etiqueta de la lista a cargar.
+ * @returns {Array} La lista en la parte superior de la pila.
+ */
 function topOfList(label) {
 
     const list = loadList(label); // Cargar la lista
@@ -356,11 +475,17 @@ function topOfList(label) {
 	
 }
 
-
+/**
+ * Muestra el estado actual de la pila.
+ */
 function showStack() {
     console.log("Current stack:", JSON.stringify(stack));
 }
 
+/**
+ * Inserta un valor en la lista en la parte superior de la pila.
+ * @param {*} value - El valor a insertar en la lista.
+ */
 function insertIntoList(value) {
     console.log("Stack before inserting into list:", stack);
     if (stack.length === 0 || !Array.isArray(stack[stack.length - 1])) {
@@ -373,6 +498,9 @@ function insertIntoList(value) {
     // No es necesario volver a poner la lista en el stack
 }
 
+/**
+ * Toma un valor de una lista en la pila utilizando un índice.
+ */
 function takeFromList() {
     showStack();
     if (stack.length < 2) {
@@ -406,6 +534,10 @@ function takeFromList() {
 	
 }
 
+/**
+ * Obtiene el resto de una lista a partir de un índice especificado.
+ * @param {string} label - La etiqueta de la lista a cargar.
+ */
 function getListFromIndex(label) {
     // Cargar la lista usando la función loadList
     const list = loadList(label);
@@ -449,26 +581,30 @@ function getListFromIndex(label) {
 
 }
 
-	function logic(instructions) {
-		for (let i = 0; i < instructions.length; i++) {
-			const inst = instructions[i];
-			if (inst.children && inst.children.length > 0) {
-				let command = inst.children[0].getText();
-				const args = inst.children.slice(1).map(arg => arg.getText());
+/**
+ * Ejecuta las instrucciones proporcionadas.
+ * @param {Array} instructions - Las instrucciones a ejecutar.
+ */
+function logic(instructions) {
+    for (let i = 0; i < instructions.length; i++) {
+        const inst = instructions[i];
+        if (inst.children && inst.children.length > 0) {
+            let command = inst.children[0].getText();
+            const args = inst.children.slice(1).map(arg => arg.getText());
 
-				if (command.startsWith("$FUN")) command = "$FUN";
-				const handler = instructionHandlers[command];
-				if (handler) {
-					const result = handler(args, inst, i);
-					if (Number.isInteger(result)) { i = result; }
+            if (command.startsWith("$FUN")) command = "$FUN";
+            const handler = instructionHandlers[command];
+            if (handler) {
+                const result = handler(args, inst, i);
+                if (Number.isInteger(result)) { i = result; }
 
-				} else console.error(`Unknown instruction: ${command}`);
+            } else console.error(`Unknown instruction: ${command}`);
 
-			} else {
-				console.warn("Instruction does not have children:", inst);
-			}
-		}
-	}
+        } else {
+            console.warn("Instruction does not have children:", inst);
+        }
+    }
+}
 
 }
 export { runProgram };
