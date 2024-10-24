@@ -79,9 +79,6 @@ function loadValue(args) {
     }
 }
 
-
-
-	
 	function input() {
 		return new Promise((resolve) => {
 
@@ -105,8 +102,15 @@ function loadValue(args) {
 	function storeInFrame(frameIdx, varIdx) {
 		const fIndex = parseInt(frameIdx, 10);
 		const vIndex = parseInt(varIdx, 10);
+
+        accumulator = stack.pop();
+
 		frames[fIndex] = frames[fIndex] || {};
-		frames[fIndex][vIndex] = accumulator;
+        frames[fIndex][vIndex] = accumulator;
+
+        if(accumulator.label){
+            accumulator = accumulator.label;
+        }
 		console.log(`Stored ${accumulator} in frame ${fIndex}, variable ${vIndex}`);
 	}
 	function conditionalBranch(args, idx, bool) {
@@ -127,6 +131,9 @@ function loadValue(args) {
 		const vIndex = parseInt(varIdx, 10);
 		accumulator = frames[fIndex]?.[vIndex] ?? 0;
 		stack.push(accumulator);
+        if(accumulator.label){
+            accumulator = accumulator.label;
+        }
 		console.log(`Loaded ${accumulator} from frame ${fIndex}, variable ${vIndex}: ${accumulator}`);
 	}
 	function compareOperation(operation, opName) {
@@ -161,6 +168,7 @@ function loadValue(args) {
 		const index = findInstructionIndex(`$FUN ${label}`);
 		if (index !== -1) {
 			console.log(`Loaded function ${label} at index ${index}`);
+            //storeInFrame
 			stack.push({ index, label });
 			accumulator = index;
 		} else {
@@ -175,7 +183,10 @@ function loadValue(args) {
 
 	function applyFunction(args, idx) {
 		if (stack.length === 0) return console.error("No function index on the stack.");
-		const funcIndex = stack.find((item) => item.label == args).index;
+        const func = stack.pop();
+		//const funcIndex = stack.find((item) => item.label == args).index;
+        const funcIndex = func.index;
+        
 
 		returnAddress = idx;
 		frames.unshift({});
@@ -219,10 +230,6 @@ function loadValue(args) {
 		return idx;
 	}
 	
-	
-	
-	
-	
 function loadList(label) {
     const list = lists[label]; // Obtener la lista desde 'lists'
 
@@ -236,12 +243,6 @@ function loadList(label) {
         return null; // Retornar null si no se carga
     }
 }
-
-
-
-
-
-
 
 
 function pushToStack(value) {
@@ -325,11 +326,6 @@ function insertInList(label) {
 }
 
 
-
-
-
-
-
 function topOfList(label) {
 
     const list = loadList(label); // Cargar la lista
@@ -359,10 +355,6 @@ function topOfList(label) {
 	stack.splice(0,stack.length);
 	
 }
-
-
-
-
 
 
 function showStack() {
@@ -457,10 +449,6 @@ function getListFromIndex(label) {
 
 }
 
-
-
-
-	
 	function logic(instructions) {
 		for (let i = 0; i < instructions.length; i++) {
 			const inst = instructions[i];

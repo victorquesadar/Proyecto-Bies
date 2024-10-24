@@ -1,6 +1,6 @@
 ; Autor:Esteban Mojica Gonzales
 
-LDV 16           ; Cargar el número cuyo Fibonacci se desea calcular (por ejemplo, 5)
+LDV 10           ; Cargar el número cuyo Fibonacci se desea calcular (por ejemplo, 5)
 BST 0 1
 
 
@@ -64,6 +64,7 @@ $END $10         ; Fin de la función Fibonacci
 
 LDF $10          ; Cargar funcion Fibonacci
 BST 0 0
+BLD 0 0
 APP $10          ; Llamar a la función Fibonacci
 
 ; Imprimir el resultado
