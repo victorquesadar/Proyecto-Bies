@@ -53,8 +53,9 @@ TOL: 'TOL';                            // Retornar de función
 HLT: 'HLT';                             // Instrucción para detener
 FUN: '$FUN ' FUNCTION;                   // Definir función
 
-LIST: '[' (NUM (',' NUM)*)? ']';
-INP: 'INP';                             // Instrucción para entrada
+LIST: '[' (NUM (',' NUM)*)? ']' | STRING;
+INP: 'INP';    
+STRING: '"' (CHAR)* '"';                          // Instrucción para entrada
 
 // Comparaciones
 EQ: 'EQ';                               // Instrucción para igualdad
@@ -69,9 +70,10 @@ BF: 'BF';                               // Bifurcación condicional en falso
 BR: 'BR';                               // Bifurcación incondicional
 
 
-value: NUM | LIST;
+value: NUM | LIST | STRING;
 
 NUM: ('-'? [0-9]+);                     // Definición de números (incluyendo negativos)
 WS: [ \t\r\n]+ -> skip;                 // Espacios en blanco son ignorados
 FUNCTION:'$'[0-9]+;
 COMMENT: ';' ~[\r\n]* -> skip;          // Ignorar comentarios hasta el final de la línea
+CHAR: .; // Permitir letras, números y guiones bajos

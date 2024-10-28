@@ -52,6 +52,17 @@ function runProgram(parsedProgram) {
 function loadValue(args) {
     // Si 'args' es una cadena, intentamos interpretarla como una lista
     if (typeof args === 'string') {
+        // Verificar si es una cadena entre comillas
+        if (args.startsWith('"') && args.endsWith('"')) {
+            const stringValue = args.slice(1, -1); // Eliminar las comillas
+            // Desfragmentar la cadena en caracteres individuales
+            const fragments = stringValue.split('').map(item => item); // Desfragmentar en caracteres
+            stack.unshift(fragments); // Agregar la lista desfragmentada al principio del stack
+            console.log(`String loaded onto stack as fragments:`, fragments);
+            return; // Salimos de la función después de cargar la lista desfragmentada
+        }
+
+        // Verificar si es una lista en formato JSON
         if (args.startsWith('[') && args.endsWith(']')) {
             try {
                 // Convertimos la cadena en una lista utilizando JSON.parse
@@ -84,6 +95,7 @@ function loadValue(args) {
         console.error(`Invalid argument: ${args}. Expected a number or a list.`);
     }
 }
+
 
 /**
  * Solicita una entrada del usuario a través de la consola.

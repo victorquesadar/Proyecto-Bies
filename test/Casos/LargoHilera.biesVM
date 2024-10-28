@@ -1,67 +1,44 @@
-; Autor:Victor Quesada Rodriguez
+; Autor: v
 
-; Código principal
-LDV 1                      ; Cargar la hilera
-BST 0 0                    ; Almacenar la hilera en la posición 0
-LDF $1                     ; Cargar la función que calcula el largo
-BST 0 1                    ; Almacenar la dirección de la hilera en la posición 1
+; Asumimos que la cadena está almacenada en una lista en el stack
+LDV "hola"          
+TOL                 ; Convertir la cadena a una lista (si es necesario)
+BST 0 0             ; Almacenar la lista en la posición 0 del frame
+LDV 0               ; Inicializar el contador en 0
+BST 0 1             ; Almacenar el contador en la posición 1 del frame
 
-LDV 0                      ; Inicializar longitud en 0
-BST 0 2                    ; Almacenar longitud en la posición 2
+; Comenzar el bucle para contar los caracteres
+$FUN $10            ; Inicio de la función para contar longitud
 
-; Comienza el bucle
-BLD 0 1                    ; Cargar la hilera
-LNT                        ; Verificar si la hilera está vacía
-BT +8                      ; Si está vacía, saltar a la salida
+BLD 0 0             ; Cargar la lista desde la posición 0
+LNT                 ; Test de nulidad de la lista
+BT 6                ; Si la lista no es nula, continuar
 
-; Incrementar longitud
-BLD 0 2                    ; Cargar longitud
-LDV 1                      ; Cargar 1
-ADD                        ; longitud++
-BST 0 2                    ; Guardar longitud actualizada
+; Si es nula, retornar la longitud
+BLD 0 1             ; Cargar el contador
+RET                 ; Retornar de la función
 
-; Continuar al siguiente carácter
-BLD 0 1                    ; Cargar la hilera
-LDV 1                      ; Cargar la posición actual
-LRK                        ; Obtener el k-ésimo carácter (k = posición)
-BST 0 1                    ; Actualizar la hilera en la posición 1
+; Procesar el primer carácter
+BLD 0 0             ; Cargar la lista nuevamente
+LTK                 ; Obtener el primer elemento
+PRN                 ; (opcional) Imprimir el carácter para depuración
+BLD 0 1             ; Cargar el contador
+ADD                 ; Incrementar el contador
+BST 0 1             ; Almacenar el nuevo valor del contador
 
-BR -6                      ; Repetir el bucle
+; Obtener el resto de la lista
+BLD 0 0             ; Cargar la lista
+LRK                 ; Obtener el resto de la lista después del primer elemento
+BST 0 0             ; Actualizar la lista con el resto
+BR -8               ; Repetir el ciclo desde la etiqueta anterior
 
-; Fin del bucle, devolver longitud
-BLD 0 2                    ; Cargar longitud final
-RET                        ; Retornar longitud
+$END $10            ; Fin de la función para contar longitud
 
-; Funciones al final
-$FUN $1                    ; Declaración de la función para calcular el largo
-LDF $2                     ; Cargar la función que obtiene el largo
-RET                        ; Retornar
-$END $1                    ; Fin de la función
+; Llamar a la función para contar la longitud
+LDF $10             ; Cargar función
+APP $10             ; Aplicar la función
 
-$FUN $2                    ; Función que cuenta el largo de la lista
-BLD 1 0                    ; Cargar la lista
-LNT                        ; Comprobar si está vacía
-BT +8                      ; Saltar si está vacía
-
-LDV 1                      ; Inicializar en 0
-BST 2 0                    ; Almacenar longitud en posición 0
-
-; Comienza el bucle
-BLD 1 0                    ; Cargar lista
-LDV 1                      ; Cargar longitud
-ADD                        ; Incrementar longitud
-BST 2 0                    ; Almacenar longitud
-
-; Continuar al siguiente elemento
-BLD 1 0                    ; Cargar lista
-LDV 1                      ; Cargar longitud
-LRK                        ; Obtener el k-ésimo elemento
-BST 1 0                    ; Almacenar lista en posición 0
-
-BR -6                      ; Repetir el bucle
-
-; Fin del bucle
-BLD 2 0                    ; Cargar longitud final
-RET                        ; Retornar longitud
-$END $2                    ; Fin de la función
-HLT                        ; Terminar la ejecución
+; Imprimir el resultado
+BLD 0 1             ; Cargar el contador (longitud de la cadena)
+PRN                 ; Imprimir el resultado (longitud de la cadena)
+HLT                 ; Detener la máquina

@@ -1,3 +1,9 @@
-LDV [1,2,3,4]  ; Cargar la lista [1, 2, 3, 4] en el registro
-PRN               ; Imprimir la lista cargada
-HLT               ; Detener el programa
+LDV "hola mundo"   ; 
+
+BST 0 0         ; Guardar la lista en la posición 0 de memoria
+PRN 
+; Imprimir la lista guardada en memoria
+BLD 0 0         ; Cargar la lista desde la posición 0
+PRN             ; Imprimir la lista
+
+HLT             ; Detener el programa
