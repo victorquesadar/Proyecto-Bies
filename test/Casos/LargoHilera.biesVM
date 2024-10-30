@@ -10,27 +10,32 @@ BST 0 1             ; Almacenar el contador en la posición 1 del frame
 ; Comenzar el bucle para contar los caracteres
 $FUN $10            ; Inicio de la función para contar longitud
 
-BLD 0 0             ; Cargar la lista desde la posición 0
+BLD 1 0             ; Cargar la lista desde la posición 0
 LNT                 ; Test de nulidad de la lista
-BT 6                ; Si la lista no es nula, continuar
+BF 4                ; Si la lista no es nula, continuar
 
 ; Si es nula, retornar la longitud
-BLD 0 1             ; Cargar el contador
+BLD 1 1             ; Cargar el contador
+LDV 1
+ADD
 RET                 ; Retornar de la función
 
 ; Procesar el primer carácter
-BLD 0 0             ; Cargar la lista nuevamente
+BLD 1 0             ; Cargar la lista nuevamente
+LDV 0
 LTK                 ; Obtener el primer elemento
 PRN                 ; (opcional) Imprimir el carácter para depuración
-BLD 0 1             ; Cargar el contador
+BLD 1 1  
+LDV 1           ; Cargar el contador
 ADD                 ; Incrementar el contador
-BST 0 1             ; Almacenar el nuevo valor del contador
+BST 1 1             ; Almacenar el nuevo valor del contador
 
 ; Obtener el resto de la lista
-BLD 0 0             ; Cargar la lista
+BLD 1 0  			; Cargar la lista
+BLD 1 1           
 LRK                 ; Obtener el resto de la lista después del primer elemento
-BST 0 0             ; Actualizar la lista con el resto
-BR -8               ; Repetir el ciclo desde la etiqueta anterior
+BST 1 0             ; Actualizar la lista con el resto
+BR -18               ; Repetir el ciclo desde la etiqueta anterior
 
 $END $10            ; Fin de la función para contar longitud
 
@@ -40,5 +45,7 @@ APP $10             ; Aplicar la función
 
 ; Imprimir el resultado
 BLD 0 1             ; Cargar el contador (longitud de la cadena)
+LDV 1
+ADD
 PRN                 ; Imprimir el resultado (longitud de la cadena)
 HLT                 ; Detener la máquina
