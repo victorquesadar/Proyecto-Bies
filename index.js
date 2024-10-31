@@ -25,6 +25,6 @@ if (args.length < 1) {
 }
 
 const fileName = args[0]; // Primer argumento: nombre del archivo
-//const fileName = "factorialIterativo";
+//const fileName = "mayor";
 // Llama a la función principal
 main("./test/Casos/"+fileName+".biesVM");

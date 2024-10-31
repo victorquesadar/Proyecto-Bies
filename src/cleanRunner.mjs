@@ -313,15 +313,16 @@ function loadValue(args) {
 	function returnFromFunction() {
 		if (frames.length > 1) {
 			frames.shift();
-			if (returnAddress.length > 1) {
-                flag = (returnAddress.length >1)
+            flag = (returnAddress.length >1)
+
+                
 
                 const rt = returnAddress.pop();
 				console.log(`Returning to instruction ${rt}`);
                 
                 returning = true;
 				return rt;
-			}
+			
 		} else {
             return -1;
 			console.error("Cannot return from main program frame.");
