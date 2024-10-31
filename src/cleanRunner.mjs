@@ -3,9 +3,11 @@ import readline from 'readline';
 let stack = []; // Pila para almacenar valores
 let accumulator = 0;
 const frames = [{}]; // Inicializar con un frame vacío
-let returnAddress = null; // Inicializar la dirección de retorno
+let returnAddress = []; // Inicializar la dirección de retorno
 let actualFrame = 0;
 let lists = [];
+let flag = false, finalAdress = null; // dentro de una funcion
+let returning = false;
 
 function runProgram(parsedProgram) {
 	console.log("Running program...");
@@ -256,7 +258,7 @@ function loadValue(args) {
      * @returns {number} El índice de retorno de la función.
      */  
 	function endOfFrame(args, inst, idx) {
-		flag = true;
+		flag = false;
 		console.log("End of frame.");
 		return returnFromFunction();
 	}
@@ -271,9 +273,10 @@ function loadValue(args) {
         const func = stack.pop();
 		//const funcIndex = stack.find((item) => item.label == args).index;
         const funcIndex = func.index;
+        flag = true;
         
-
-		returnAddress = idx;
+        returnAddress.push(idx);
+		//returnAddress = idx;
 		frames.unshift({});
 		console.log(`Applying function at index ${funcIndex}`);
 		executeFunction(funcIndex);
@@ -310,12 +313,17 @@ function loadValue(args) {
 	function returnFromFunction() {
 		if (frames.length > 1) {
 			frames.shift();
-			if (returnAddress !== null) {
-				console.log(`Returning to instruction ${returnAddress}`);
-				//stack.push(accumulator);
-				return returnAddress;
+			if (returnAddress.length > 1) {
+                flag = (returnAddress.length >1)
+
+                const rt = returnAddress.pop();
+				console.log(`Returning to instruction ${rt}`);
+                
+                returning = true;
+				return rt;
 			}
 		} else {
+            return -1;
 			console.error("Cannot return from main program frame.");
 		}
 	}
@@ -614,6 +622,16 @@ function logic(instructions) {
 
         } else {
             console.warn("Instruction does not have children:", inst);
+        }
+
+
+        if(returnAddress.length == 1 && !flag){
+            finalAdress = returnAddress.pop();
+            return
+        }
+        if(returning){
+            returning = false;
+            return;
         }
     }
 }
