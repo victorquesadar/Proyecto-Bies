@@ -1,78 +1,50 @@
-; Autor: Esteban Mojica Gonzales
+; Autor: Victor Quesada
 
 ; Almacenar la cadena en la posición 0 del stack
-LDV "hola"          
-TOL                 ; Convertir la cadena a una lista (si es necesario)
-BST 0 0            ; Almacenar la lista en la posición 0 del stack
 
-; Inicializar el contador en 0
-LDV 0               
-BST 0 1            ; Almacenar el contador en la posición 1 del stack
+LDV "hola"          
+TOL                
+BST 0 0            
+LDV []
+TOL          ; Inicializar el contador en 0
+BST 0 1             ; Almacenar el contador en la posición 1 del frame
 
 ; Comenzar el bucle para contar los caracteres
-$FUN $10           ; Inicio de la función para contar longitud
+$FUN $10            ; Inicio de la función para contar longitud
 
-BLD 0 0            ; Cargar la lista desde la posición 0
+BLD 1 0             ; Cargar la lista desde la posición 0
 LNT                 ; Test de nulidad de la lista
-BT 6                ; Si la lista no es nula, continuar
+BF 2                ; Si la lista no es nula, continuar
 
 ; Si es nula, retornar la longitud
-BLD 0 1            ; Cargar el contador
+BLD 1 1             ; Cargar el contador
 RET                 ; Retornar de la función
 
 ; Procesar el primer carácter
-BLD 0 0            ; Cargar la lista nuevamente
-LTK                 ; Obtener el primer elemento
-BLD 0 1            ; Cargar el contador
-ADD                 ; Incrementar el contador
-BST 0 1            ; Almacenar el nuevo valor del contador
+BLD 1 0             
+LDV 0
+LTK                 
+BST 0 2
+BLD 1 1
+BLD 0 2
+LIN
+               
+ 
 
-; Obtener el resto de la lista
-BLD 0 0            ; Cargar la lista
-LRK                 ; Obtener el resto de la lista después del primer elemento
-BST 0 0            ; Actualizar la lista con el resto
-BR -8               ; Repetir el ciclo desde la etiqueta anterior
+BLD 1 0  			
+LDV 1          
+LRK                 
+BST 1 0             
+BR -15               
 
-$END $10           ; Fin de la función para contar longitud
+$END $10            ; Fin de la función para contar longitud
 
 ; Llamar a la función para contar la longitud
-LDF $10            ; Cargar función
-APP $10            ; Aplicar la función
+LDF $10             ; Cargar función
+APP $10             ; Aplicar la función
 
-; Guardar la longitud de la cadena
-BLD 0 1            ; Cargar el contador (longitud)
-BST 0 2            ; Almacenar longitud en la posición 2
+; Imprimir el resultado
+BLD 0 1             
 
-; Comenzar a invertir la hilera
-LDV 0               ; Inicializar el índice para la hilera invertida
-BST 0 3            ; Almacenar la hilera invertida en la posición 3 del stack
-
-$FUN $20           ; Inicio de la función para invertir la hilera
-
-BLD 0 0            ; Cargar la lista
-LNT                 ; Test de nulidad de la lista
-BT 6                ; Si la lista no es nula, continuar
-
-; Procesar el último carácter
-BLD 0 0            ; Cargar la lista
-LRK                 ; Obtener el resto de la lista
-BST 0 0            ; Actualizar la lista con el resto
-BLD 0 0            ; Cargar nuevamente la lista
-LTK                 ; Obtener el primer carácter (de la lista original)
-BST 0 4            ; Almacenar el carácter en la posición 4 del stack
-
-; Insertar carácter al inicio de la hilera invertida
-BLD 0 3            ; Cargar la hilera invertida
-LIN                 ; Insertar el carácter al inicio de la lista invertida
-BST 0 3            ; Almacenar de nuevo la hilera invertida
-
-; Volver a la lista original
-BLD 0 0            ; Cargar la lista
-BR $20             ; Repetir el ciclo desde la etiqueta de invertir
-
-$END $20           ; Fin de la función para invertir la hilera
-
-; Imprimir la hilera invertida
-BLD 0 3            ; Cargar la hilera invertida
-PRN                 ; Imprimir la hilera invertida
-HLT                 ; Detener la máquina
+PRN                 ; Imprimir el resultado (longitud de la cadena)
+HLT  

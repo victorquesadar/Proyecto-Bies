@@ -25,6 +25,6 @@ if (args.length < 1) {
 }
 
 const fileName = args[0]; // Primer argumento: nombre del archivo
-//const fileName = "mayor";
+//const fileName = "subhilera";
 // Llama a la función principal
 main("./test/Casos/"+fileName+".biesVM");

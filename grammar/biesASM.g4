@@ -57,6 +57,7 @@ LIST: '[' (NUM (',' NUM)*)? ']' | STRING;
 INP: 'INP';    
 STRING: '"' (CHAR)* '"';                          // Instrucción para entrada
 
+
 // Comparaciones
 EQ: 'EQ';                               // Instrucción para igualdad
 GT: 'GT';                               // Instrucción para mayor que
@@ -76,4 +77,4 @@ NUM: ('-'? [0-9]+);                     // Definición de números (incluyendo n
 WS: [ \t\r\n]+ -> skip;                 // Espacios en blanco son ignorados
 FUNCTION:'$'[0-9]+;
 COMMENT: ';' ~[\r\n]* -> skip;          // Ignorar comentarios hasta el final de la línea
-CHAR: .; // Permitir letras, números y guiones bajos
+CHAR: ~["\r\n]; // Permitir letras, números y guiones bajos

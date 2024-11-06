@@ -1,107 +1,117 @@
-; Autor:Victor Quesada Rodriguez
+LDV "hoaooh"          
+TOL                
+BST 0 0            
+LDV []
+TOL          ; Inicializar el contador en 0
+BST 0 1             ; Almacenar el contador en la posición 1 del frame
+BLD 0 0
+BST 0 3         ;lista original copiada
+LDV 0
+BST 0 4         ;contador
 
-; Llamadas a funciones iniciales
-LDV 1                     ; Cargar el primer argumento (la lista)
-BST 0 0                   ; Guardar la lista en la posición 0
-LDF $2                    ; Cargar la función para calcular la longitud
-BST 0 1                   ; Almacenar la función en la posición 1
-APP $2                    ; CALCULA FOO(2) - Llamar a la función de longitud
-LDV 1                     ; Cargar la longitud de la lista
-SUB                       ; END = len - 1
-BST 1 2                   ; Guardar END en la posición 2
 
-LDV 0                     ; Inicializar start = 0
-BST 1 1                   ; Guardar start en la posición 1
+$FUN $10            ; Inicio de la función para contar longitud
 
-; Comienza la función para verificar palíndromo
-LDF $1                    ; Cargar la función para verificar palíndromo
-BST 0 1                   ; Almacenar la función en la posición 1
-APP $1                    ; CALCULA FOO(1) - Llamar a la función de palíndromo
-PRN                       ; Imprimir resultado
+BLD 1 0             ; Cargar la lista desde la posición 0
+LNT                 ; Test de nulidad de la lista
+BF 5                ; Si la lista no es nula, continuar
 
-HLT                       ; Detener la ejecución
 
-$FUN $2                   ; Función para calcular la longitud de una lista
-    BLD 2 0               ; Cargar la lista
-    BST 2 1               ; Almacenar la lista en la posición 1
+BLD 1 4
+LDV 1
+SUB
+BST 1 4 
+;             ; Cargar el lista
+RET                 ; Retornar de la función
 
-    LDV 1                 ; Inicializar longitud en 1
-    BST 2 2               ; Almacenar longitud en la posición 2
+; Procesar el primer carácter
+BLD 1 0             
+LDV 0
+LTK                 
+BST 0 2
+BLD 1 1
+BLD 0 2
+LIN
+               
+ 
 
-    ; Comienza el bucle
-    BLD 2 1               ; Cargar la lista
-    LNT                    ; Comprobar si está vacía
-    BT +10                ; Si está vacía, saltar a fin
+BLD 1 0  			
+LDV 1          
+LRK                 
+BST 1 0
+LDV 1
+BLD 1 4
+ADD
+BST 1 4             
+BR -22               
 
-    ; Obtener el siguiente elemento de la lista
-    BLD 2 1               ; Cargar la lista
-    LDV 1                 ; Cargar longitud actual
-    LRK                   ; Obtener el k-ésimo elemento
-    BST 2 1               ; Almacenar el siguiente elemento en la posición 1
+$END $10            ; Fin de la función para contar longitud
 
-    ; Incrementar longitud
-    BLD 2 2               ; Cargar longitud
-    LDV 1                 ; Cargar longitud actual
-    ADD                   ; Incrementar longitud
-    BST 2 2               ; Guardar longitud actualizada
+; Llamar a la función para contar la longitud
+LDF $10             ; Cargar función
+APP $10             ; Aplicar la función
+BST 0 1
 
-    BR -11                ; Repetir el bucle
+LDV 0
+BST 0 5     ;contador
+LDV 0
+BST 0 8
 
-    ; Retornar longitud final
-    BLD 2 2               ; Cargar longitud final
-    LDV 1                 ; Cargar longitud
-    SUB                   ; Restar 1 para ajustar
-    RET                   ; Retornar longitud
-$END $2
 
-$FUN $1                   ; Función para verificar si es palíndromo
-    ; Inicializar índices start = 0 y END = len - 1
-    LDV 0                 ; Inicializar start = 0
-    BST 1 1               ; Guardar start en la posición 1
-    BLD 1 0               ; Cargar la lista
-    LDF $2                ; Cargar la función que calcula la longitud
-    APP                   ; Ejecutar la función para obtener la longitud de la lista
-    LDV 1                 ; Cargar la longitud de la lista
-    SUB                   ; END = len - 1
-    BST 1 2               ; Guardar END en la posición 2
+$FUN $20         
 
-    ; Comienza el ciclo de comparación
-    BLD 1 1               ; Cargar start
-    BLD 1 2               ; Cargar END
-    LT                    ; Comparar start < END
-    BF +19                ; Si no es menor, salir del ciclo
+BLD 1 4
+BLD 1 5                
+LTE                 
+BT 5                ; J
 
-    ; Comparar los elementos en start y END
-    BLD 1 0               ; Cargar la lista
-    BLD 1 1               ; Cargar start
-    LTK                   ; Obtener el elemento en la posición start
 
-    BLD 1 0               ; Cargar la lista
-    BLD 1 2               ; Cargar END
-    LTK                   ; Obtener el elemento en la posición END
+LDV 1
+BLD 1 8 
+ADD
+BST 1 8           
+RET                 ; Retornar de la función
 
-    EQ                    ; Comparar los elementos start y END
-    BT +2                 ; Si son iguales, continuar
-    BR +12                ; Si son diferentes, no es palíndromo
+; Procesar el primer carácter
 
-    ; Incrementar start y decrementar END
-    BLD 1 1               ; Cargar start
-    LDV 1                 ; Cargar 1
-    ADD                   ; start++
-    BST 1 1               ; Guardar start en la posición 1
 
-    BLD 1 2               ; Cargar END
-    LDV 1                 ; Cargar 1
-    SUB                   ; END--
-    BST 1 2               ; Guardar END en la posición 2
+BLD 1 3
+BLD 1 5
+LTK
+BST 0 6     ;almacena elemento
+BLD 1 3
+BLD 1 4
+LTK
+BST 0 7     ;alamcena otro elemento
 
-    BR -21                ; Repetir el ciclo
+BLD 0 6
+BLD 0 7
+EQ
+BT 2
 
-; Fin del ciclo
-    LDV 1                 ; Si pasó todas las comparaciones, es palíndromo
-    LDV 1                 ; Retornar 1 (verdadero)
-    RET                   ; Retornar 1
-; No es palíndromo
-    LDV 0                 ; No es palíndromo
-    RET                   ; Retornar 0 (falso)
-$END $1
+BLD 1 8
+RET
+
+BLD 1 5
+LDV 1
+ADD
+BST 1 5
+
+BLD 1 4
+LDV 1
+SUB
+BST 1 4 
+
+BR -32 
+
+
+$END $20            ; Fin de la función para contar longitud
+
+; Llamar a la función para contar la longitud
+LDF $20             ; Cargar función
+APP $20             ; Aplicar la función
+
+
+BLD 0 8             
+PRN                 
+HLT  

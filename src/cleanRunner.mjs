@@ -59,7 +59,7 @@ function loadValue(args) {
             const stringValue = args.slice(1, -1); // Eliminar las comillas
             // Desfragmentar la cadena en caracteres individuales
             const fragments = stringValue.split('').map(item => item); // Desfragmentar en caracteres
-            stack.unshift(fragments); // Agregar la lista desfragmentada al principio del stack
+            stack.push(fragments); // Agregar la lista desfragmentada al principio del stack
             console.log(`String loaded onto stack as fragments:`, fragments);
             return; // Salimos de la función después de cargar la lista desfragmentada
         }
@@ -91,7 +91,7 @@ function loadValue(args) {
         }
     } else if (Array.isArray(args)) {
         // Si 'args' es una lista, cargar la lista en el stack
-        stack.unshift(args); // Agregar la lista al principio del stack
+        stack.push(args); // Agregar la lista al principio del stack
         console.log(`List loaded onto stack:`, args);
     } else {
         console.error(`Invalid argument: ${args}. Expected a number or a list.`);
@@ -441,7 +441,7 @@ function insertInList(label) {
     }
 
     const value = stack.pop(); // Obtenemos el valor a insertar
-    const list = loadList(label); // Intentamos cargar la lista
+    const list = stack.pop();//loadList(label);  Intentamos cargar la lista
 
     if (!list) {
         console.error("Failed to load the list, aborting LIN operation.");
@@ -453,7 +453,7 @@ function insertInList(label) {
     list.unshift(value); // Agregar el valor al inicio de la lista existente
 
     // Limpiar el stack
-    stack.splice(0, stack.length);
+    //stack.splice(0, stack.length);
     
     console.log("Inserted into list:", list);
     stack.push(list); // Regresar la lista al stack
