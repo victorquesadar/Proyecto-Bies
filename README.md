@@ -2,10 +2,9 @@
 
 ## Autores
 
-- Esteban Mojica
+
 - Victor Quesada
-- Jose Alvarez
-- Dayron Myrie
+
 
 ## Obtener dependencias
 
